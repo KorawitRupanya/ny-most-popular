@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Typography from "@material-ui/core/Typography";
 import SearchBar from "../../components/SearchBar";
-import SplitButton from "../../components/SplitButton";
+import PeriodSelector from "../../components/PeriodSelector";
 import ArticleList from "../../components/ArticleList";
 
 const HomePage = () => {
@@ -60,11 +59,7 @@ const HomePage = () => {
         }}
       >
         <SearchBar searchArticles={searchArticles} />
-        <Typography variant="h6">
-          {" "}
-          Most viewed in{" "}
-          <SplitButton getArticlesByPeriod={getArticlesByPeriod} /> Days{" "}
-        </Typography>
+        <PeriodSelector getArticlesByPeriod={getArticlesByPeriod} />
       </div>
       <ArticleList loading={loading} articles={filteredArticles} />
     </>

@@ -1,31 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
+import { Button, Typography, Chip, CircularProgress } from "@material-ui/core";
 import Image from "material-ui-image";
-import "./index.css";
-import { Button, Link } from "@material-ui/core";
 import axios from "axios";
-import { useParams } from "react-router-dom";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import { useEffect } from "react";
+import "./index.css";
 
 const DetailPage = () => {
   const [loading, setLoading] = useState(true);
-  const [articleState, setArticle] = useState([]);
+  const [articleState, setArticleState] = useState([]);
   let { article } = useParams();
 
   useEffect(() => {
-    const searchArticles = async (article) => {
+    const searchArticles = async () => {
       setLoading(true);
       const res = await axios.get(
         `https://api.nytimes.com/svc/search/v2/articlesearch.json?q=${article}&api-key=${process.env.REACT_APP_NYTIMES_API_KEY}`
       );
-      setArticle(res.data.response.docs);
+      setArticleState(res.data.response.docs[0]);
       setLoading(false);
     };
     searchArticles();
-  }, []);
+  }, [article]);
 
-  console.log("Article Title: ", article);
-  console.log("Artiles: ", articleState);
   return (
     <>
       {loading ? (
@@ -35,7 +31,6 @@ const DetailPage = () => {
           <div class="split left">
             <div class="centered">
               <Image
-                max-width="600px"
                 src={
                   articleState.multimedia?.[0]?.url
                     ? `https://nyt.com/${articleState.multimedia[0].url}`
@@ -43,18 +38,26 @@ const DetailPage = () => {
                 }
                 alt="news-img"
               />
-              <h2>{articleState.title}</h2>
-              {/* <p>{articleState.media[0].caption}</p> */}
-              {/* <p>section: {articleState.section}</p> */}
-              {/* <p>
-                published date : {articleState.published_date.split("T")[0]}
-              </p> */}
+              <a href={articleState.web_url}>
+                <Typography variant="h6">
+                  {articleState.headline.main}
+                </Typography>
+              </a>
+              <Typography variant="body1">{articleState.abstract}</Typography>
+              <br />
+              <Typography variant="subtitle1">
+                Published: {articleState.pub_date.split("T")[0]} &nbsp; | &nbsp;
+                {articleState.byline.original}
+              </Typography>
+              <br />
+              <Chip label={articleState.section_name} />
             </div>
           </div>
-
           <div class="split right">
             <div class="centered">
-              <p>{articleState.abstract}</p>
+              <Typography variant="body1">
+                {articleState.lead_paragraph}
+              </Typography>
               <br />
               <Link to="/">
                 <Button arget="_blank">Back</Button>
