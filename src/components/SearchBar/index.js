@@ -7,12 +7,14 @@ import SearchIcon from "@material-ui/icons/Search";
 
 const SearchBar = ({ searchArticles }) => {
   const [text, setText] = useState("");
-  const handleChange = (e) => {
-    setText(e.target.value);
-    e.preventDefault();
-    searchArticles(text);
+
+  const handleChange = (event) => {
+    event.preventDefault();
+    const { value } = event.target;
+    setText(value);
+    searchArticles(value);
   };
-  const handleSubmit = (e) => {};
+
   return (
     <div>
       <TextField
