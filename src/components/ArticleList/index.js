@@ -30,9 +30,13 @@ function ArticleList({ loading, articles }) {
           className={classes.root}
         >
           <Grid container spacing={3}>
-            {articles.map((article, index) => (
+            {articles.map((article) => (
               <Grid key={article.id} item xs={12} sm={4} md={6}>
-                <Link to="/detail">
+                <Link
+                  to={{
+                    pathname: `/detial/${article.id}`,
+                  }}
+                >
                   <ArticleCard article={article} />
                 </Link>
               </Grid>
